@@ -1,0 +1,936 @@
+{
+  "info": {
+    "name": "VoyageLib API Collection",
+    "description": "Complete API collection for VoyageLib Digital Library System",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000/api",
+      "type": "string"
+    },
+    {
+      "key": "admin_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "staff_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "user_token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Register User",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Test User\",\n    \"email\": \"test@example.com\",\n    \"password\": \"password123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/register",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "register"]
+            },
+            "description": "Register a new user account (role: user by default)"
+          }
+        },
+        {
+          "name": "Login Admin",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.collectionVariables.set(\"admin_token\", jsonData.data.access_token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"admin@voyagelib.com\",\n    \"password\": \"admin123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
+            },
+            "description": "Login as admin user"
+          }
+        },
+        {
+          "name": "Login Staff",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.collectionVariables.set(\"staff_token\", jsonData.data.access_token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"staff@voyagelib.com\",\n    \"password\": \"staff123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
+            },
+            "description": "Login as staff user"
+          }
+        },
+        {
+          "name": "Login User",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    var jsonData = pm.response.json();",
+                  "    pm.collectionVariables.set(\"user_token\", jsonData.data.access_token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"email\": \"user@example.com\",\n    \"password\": \"user123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
+            },
+            "description": "Login as regular user"
+          }
+        },
+        {
+          "name": "Get Profile",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{user_token}}"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/profile",
+              "host": ["{{base_url}}"],
+              "path": ["profile"]
+            },
+            "description": "Get current user profile"
+          }
+        },
+        {
+          "name": "Update Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{user_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Updated Name\",\n    \"phone\": \"081234567890\",\n    \"address\": \"New Address\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/profile",
+              "host": ["{{base_url}}"],
+              "path": ["profile"]
+            },
+            "description": "Update current user profile"
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{user_token}}"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/logout",
+              "host": ["{{base_url}}"],
+              "path": ["logout"]
+            },
+            "description": "Logout current user"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Books",
+      "item": [
+        {
+          "name": "Get All Books",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{user_token}}"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/books?search=&category=&include_online=true",
+              "host": ["{{base_url}}"],
+              "path": ["books"],
+              "query": [
+                {
+                  "key": "search",
+                  "value": "",
+                  "description": "Search by title, author, or category"
+                },
+                {
+                  "key": "category",
+                  "value": "",
+                  "description": "Filter by category"
+                },
+                {
+                  "key": "include_online",
+                  "value": "true",
+                  "description": "Include Gutendex online books"
+                }
+              ]
+            },
+            "description": "Get all books (local + Gutendex)"
+          }
+        },
+        {
+          "name": "Get Book by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{user_token}}"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/books/{book_id}",
+              "host": ["{{base_url}}"],
+              "path": ["books", "{book_id}"]
+            },
+            "description": "Get specific book details"
+          }
+        },
+        {
+          "name": "Create Book (Staff/Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{staff_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"Laravel for Beginners\",\n    \"author\": \"John Doe\",\n    \"category\": \"Programming\",\n    \"stock\": 5,\n    \"isbn\": \"978-1234567890\",\n    \"description\": \"A comprehensive guide to Laravel\",\n    \"cover_url\": \"https://example.com/cover.jpg\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/books",
+              "host": ["{{base_url}}"],
+              "path": ["books"]
+            },
+            "description": "Add new book to library (Staff/Admin only)"
+          }
+        },
+        {
+          "name": "Update Book (Staff/Admin)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{staff_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"Updated Book Title\",\n    \"stock\": 10\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/books/{book_id}",
+              "host": ["{{base_url}}"],
+              "path": ["books", "{book_id}"]
+            },
+            "description": "Update book details (Staff/Admin only)"
+          }
+        },
+        {
+          "name": "Delete Book (Staff/Admin)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/books/{book_id}",
+              "host": ["{{base_url}}"],
+              "path": ["books", "{book_id}"]
+            },
+            "description": "Delete book from library (Staff/Admin only)"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Borrowings",
+      "item": [
+        {
+          "name": "Get All Borrowings",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{staff_token}}"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/borrowings?status=&from_date=&to_date=",
+              "host": ["{{base_url}}"],
+              "path": ["borrowings"],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "",
+                  "description": "Filter by status (dipinjam/dikembalikan)"
+                },
+                {
+                  "key": "from_date",
+                  "value": "",
+                  "description": "Filter from date (YYYY-MM-DD)"
+                },
+                {
+                  "key": "to_date",
+                  "value": "",
+                  "description": "Filter to date (YYYY-MM-DD)"
+                }
+              ]
+            },
+            "description": "Get all borrowings (filtered by role)"
+          }
+        },
+        {
+          "name": "Get My Borrowings",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{user_token}}"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/borrowings/my",
+              "host": ["{{base_url}}"],
+              "path": ["borrowings", "my"]
+            },
+            "description": "Get current user's borrowings"
+          }
+        },
+        {
+          "name": "Borrow Book",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{user_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"book_id\": \"{book_uuid}\",\n    \"borrow_duration_days\": 7,\n    \"notes\": \"Untuk tugas kuliah\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/borrowings",
+              "host": ["{{base_url}}"],
+              "path": ["borrowings"]
+            },
+            "description": "Borrow a book (auto-approved)"
+          }
+        },
+        {
+          "name": "Return Book",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{user_token}}"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/borrowings/{borrowing_id}/return",
+              "host": ["{{base_url}}"],
+              "path": ["borrowings", "{borrowing_id}", "return"]
+            },
+            "description": "Return a borrowed book"
+          }
+        },
+        {
+          "name": "Get Borrowing Details",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{user_token}}"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/borrowings/{borrowing_id}",
+              "host": ["{{base_url}}"],
+              "path": ["borrowings", "{borrowing_id}"]
+            },
+            "description": "Get specific borrowing details"
+          }
+        },
+        {
+          "name": "Auto Return (Scheduler)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/borrowings/auto-return",
+              "host": ["{{base_url}}"],
+              "path": ["borrowings", "auto-return"]
+            },
+            "description": "Trigger auto-return for overdue books (called by scheduler)"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Promotions",
+      "item": [
+        {
+          "name": "Get All Promotions",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{user_token}}"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/promotions?active=true",
+              "host": ["{{base_url}}"],
+              "path": ["promotions"],
+              "query": [
+                {
+                  "key": "active",
+                  "value": "true",
+                  "description": "Filter active promotions only (use 'all' to get all)"
+                }
+              ]
+            },
+            "description": "Get all promotions"
+          }
+        },
+        {
+          "name": "Get Promotion by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{user_token}}"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/promotions/{promotion_id}",
+              "host": ["{{base_url}}"],
+              "path": ["promotions", "{promotion_id}"]
+            },
+            "description": "Get specific promotion details"
+          }
+        },
+        {
+          "name": "Create Promotion (Staff/Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{staff_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"Special Book Week\",\n    \"description\": \"Get 20% off on all programming books\",\n    \"image_url\": \"https://example.com/promo.jpg\",\n    \"is_active\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/promotions",
+              "host": ["{{base_url}}"],
+              "path": ["promotions"]
+            },
+            "description": "Create new promotion (Staff/Admin only)"
+          }
+        },
+        {
+          "name": "Update Promotion (Staff/Admin)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{staff_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"Updated Promotion Title\",\n    \"is_active\": false\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/promotions/{promotion_id}",
+              "host": ["{{base_url}}"],
+              "path": ["promotions", "{promotion_id}"]
+            },
+            "description": "Update promotion (Staff/Admin only)"
+          }
+        },
+        {
+          "name": "Delete Promotion (Staff/Admin)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/promotions/{promotion_id}",
+              "host": ["{{base_url}}"],
+              "path": ["promotions", "{promotion_id}"]
+            },
+            "description": "Delete promotion (Staff/Admin only)"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Users Management (Admin)",
+      "item": [
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/users?role=&search=",
+              "host": ["{{base_url}}"],
+              "path": ["users"],
+              "query": [
+                {
+                  "key": "role",
+                  "value": "",
+                  "description": "Filter by role (user/staff/admin)"
+                },
+                {
+                  "key": "search",
+                  "value": "",
+                  "description": "Search by name or email"
+                }
+              ]
+            },
+            "description": "Get all users (Admin only)"
+          }
+        },
+        {
+          "name": "Get User by ID",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/users/{user_id}",
+              "host": ["{{base_url}}"],
+              "path": ["users", "{user_id}"]
+            },
+            "description": "Get specific user details (Admin only)"
+          }
+        },
+        {
+          "name": "Create User (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"New Staff User\",\n    \"email\": \"newstaff@voyagelib.com\",\n    \"password\": \"staff123456\",\n    \"role\": \"staff\",\n    \"phone\": \"081234567890\",\n    \"address\": \"Library Office\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/users",
+              "host": ["{{base_url}}"],
+              "path": ["users"]
+            },
+            "description": "Create new user (Admin only)"
+          }
+        },
+        {
+          "name": "Update User (Admin)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"name\": \"Updated User Name\",\n    \"role\": \"staff\",\n    \"phone\": \"081234567890\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/users/{user_id}",
+              "host": ["{{base_url}}"],
+              "path": ["users", "{user_id}"]
+            },
+            "description": "Update user details (Admin only)"
+          }
+        },
+        {
+          "name": "Delete User (Admin)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/users/{user_id}",
+              "host": ["{{base_url}}"],
+              "path": ["users", "{user_id}"]
+            },
+            "description": "Delete user (Admin only)"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Reports",
+      "item": [
+        {
+          "name": "Borrowing Report",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{staff_token}}"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/reports/borrowings?from_date=&to_date=&status=&user_id=&book_id=",
+              "host": ["{{base_url}}"],
+              "path": ["reports", "borrowings"],
+              "query": [
+                {
+                  "key": "from_date",
+                  "value": "",
+                  "description": "Filter from date (YYYY-MM-DD)"
+                },
+                {
+                  "key": "to_date",
+                  "value": "",
+                  "description": "Filter to date (YYYY-MM-DD)"
+                },
+                {
+                  "key": "status",
+                  "value": "",
+                  "description": "Filter by status"
+                },
+                {
+                  "key": "user_id",
+                  "value": "",
+                  "description": "Filter by user ID"
+                },
+                {
+                  "key": "book_id",
+                  "value": "",
+                  "description": "Filter by book ID"
+                }
+              ]
+            },
+            "description": "Get borrowing report with statistics (Staff/Admin)"
+          }
+        },
+        {
+          "name": "Export Report",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{admin_token}}"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{base_url}}/reports/export?from_date=&to_date=&status=",
+              "host": ["{{base_url}}"],
+              "path": ["reports", "export"],
+              "query": [
+                {
+                  "key": "from_date",
+                  "value": "",
+                  "description": "Filter from date (YYYY-MM-DD)"
+                },
+                {
+                  "key": "to_date",
+                  "value": "",
+                  "description": "Filter to date (YYYY-MM-DD)"
+                },
+                {
+                  "key": "status",
+                  "value": "",
+                  "description": "Filter by status"
+                }
+              ]
+            },
+            "description": "Export borrowing report data (Admin only)"
+          }
+        }
+      ]
+    }
+  ]
+}

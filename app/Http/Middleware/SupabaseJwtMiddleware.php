@@ -34,6 +34,37 @@ class SupabaseJwtMiddleware
             $jwtSecret = config("services.supabase.jwt_secret");
             $decoded = JWT::decode($token, new Key($jwtSecret, "HS256"));
 
+            // Get or create user in local database
+            $email = $decoded->email ?? null;
+            $supabaseId = $decoded->sub;
+            
+            if ($email) {
+                $user = \App\Models\User::where('email', $email)
+                    ->orWhere('supabase_id', $supabaseId)
+                    ->first();
+                
+                if (!$user) {
+                    // Create user in local database if not exists
+                    $user = \App\Models\User::create([
+                        'name' => $decoded->user_metadata->name ?? $email,
+                        'email' => $email,
+                        'supabase_id' => $supabaseId,
+                        'password' => bcrypt(uniqid()), // Random password since we use Supabase auth
+                        'role' => $decoded->user_metadata->role ?? 'user'
+                    ]);
+                } else {
+                    // Update supabase_id if not set
+                    if (!$user->supabase_id) {
+                        $user->update(['supabase_id' => $supabaseId]);
+                    }
+                }
+                
+                // Set user in request
+                $request->setUserResolver(function () use ($user) {
+                    return $user;
+                });
+            }
+
             $request->merge([
                 "supabase_user_id" => $decoded->sub,
                 "supabase_user_email" => $decoded->email ?? null,
@@ -44,7 +75,7 @@ class SupabaseJwtMiddleware
             return response()->json(
                 [
                     "success" => false,
-                    "message" => "Unauthorized | Token tidak valid",
+                    "message" => "Unauthorized | Token tidak valid: " . $e->getMessage(),
                 ],
                 401,
             );

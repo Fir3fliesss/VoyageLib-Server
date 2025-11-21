@@ -23,6 +23,10 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'phone',
+        'address',
+        'role',
+        'supabase_id',
     ];
 
     /**
@@ -46,5 +50,35 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function borrowings()
+    {
+        return $this->hasMany(Borrowing::class);
+    }
+
+    public function promotions()
+    {
+        return $this->hasMany(Promotion::class, 'uploaded_by');
+    }
+
+    public function isAdmin()
+    {
+        return $this->role === 'admin';
+    }
+
+    public function isStaff()
+    {
+        return in_array($this->role, ['staff', 'admin']);
+    }
+
+    public function canManageBooks()
+    {
+        return $this->isStaff();
+    }
+
+    public function canManageUsers()
+    {
+        return $this->isAdmin();
     }
 }
